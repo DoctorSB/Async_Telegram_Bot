@@ -17,16 +17,13 @@ async def hello(message: types.message):
 #хочу привязать пользователя
 @dp.message_handler(text='Хочу привязать пользователя')
 async def chsv(message: types.message):
-    #ожидание сообщения от пользователя
-    await message.reply("Хорошо! Перешли мне сообщение от этого пупсика")
-    get_id_forward(message)
+    await message.reply("Хорошо! Перешли мне сообщение от этого пупсика")   
 
+@dp.message_handler(content_types=['any'])
 async def get_id_forward(message: types.message):
-    user = message.forward_from_chat.id
+    user = message.forward_from.id
     await message.answer(f'Вот id пользователя: {user}!', reply_markup=panel_choose_pack)
     await folder_generator(user)
-
-    
 
 #функция для получения своего id 
 @dp.message_handler(text='Хочу получать сам')
@@ -42,18 +39,9 @@ async def get_id_from_message(message: types.message):
     await message.answer(f'Вот твой id: {user}!', reply_markup=panel_choose_target)
     await folder_generator(user)
 
-#функция для получения id пользователя 
-
-
-    
-
 #функция создает папку с именем пользователя в директории data
 async def folder_generator(user):
     os.mkdir("./data/{}".format(user))
-    
-
 
 async def start():
     await dp.start_polling(bot)
-
-

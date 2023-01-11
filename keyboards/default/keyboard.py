@@ -17,4 +17,14 @@ panel_choose_pack = ReplyKeyboardMarkup(
             KeyboardButton(text='Соберу свою библиотеку'),
         ],
     ],
+    resize_keyboard=True
+)
+
+cancel_panel = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Отмена'),
+        ],
+    ],
+    resize_keyboard=True
 )

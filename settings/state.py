@@ -1,6 +1,7 @@
 from aiogram.dispatcher.filters.state import StatesGroup, State
 
-class BotState(StatesGroup):
+
+class other_State(StatesGroup):
     forwarding = State()
-    on_other = State()
-    
+    waiting = State()
+    work = State()

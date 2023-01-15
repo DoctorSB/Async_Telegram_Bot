@@ -13,13 +13,11 @@ user = 0
 
 
 # старт
-
 async def on_startup(self):
     await db_start(self)
 
 
 # стартовое сообщение
-
 @dp.message_handler(commands=['start'])
 async def hello(message: types.Message) -> None:
     await bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAEHL09ju_NYDBqyTq65N1BJqyacddxvSQACHxEAAowt_QcWMfHxvTZjli0E'),
@@ -28,8 +26,6 @@ async def hello(message: types.Message) -> None:
 
 
 # отмена
-
-
 @dp.message_handler(text='Отмена')
 async def cancel(state: FSMContext) -> None:
     current_state = state.get_state()
@@ -37,9 +33,8 @@ async def cancel(state: FSMContext) -> None:
         return
     await state.finish()
 
+
 # хочу привязать пользователя
-
-
 @dp.message_handler(text='Хочу привязать пользователя', state=None)
 async def not_chsv(message: types.Message) -> None:
     await other_State.forwarding.set()
@@ -47,10 +42,8 @@ async def not_chsv(message: types.Message) -> None:
 
 
 # получение id пользователя
-
-
 @dp.message_handler(state=other_State.forwarding, content_types=types.ContentTypes.ANY)
-async def get_id_from_forward(message: types.message, state: FSMContext):
+async def get_id_from_forward(message: types.message, state: FSMContext) -> None:
     try:
         global user
         user = message.forward_from.id
@@ -66,11 +59,10 @@ async def get_id_from_forward(message: types.message, state: FSMContext):
     await folder_generator(user)
     await state.finish()
 
+
 # функция для получения своего id
-
-
 @dp.message_handler(text='Хочу получать сам')
-async def get_id_from_user(message: types.message):
+async def get_id_from_user(message: types.message) -> None:
     await message.answer('Хорошо! Получаю твой id ...' + emoji.emojize(' 🤔'))
     global user
     user = message.from_user.id
@@ -79,8 +71,9 @@ async def get_id_from_user(message: types.message):
     await folder_generator(user)
 
 
+# запись фотографий в папку этого пользователя
 @dp.message_handler(state=other_State.waiting, content_types=types.ContentTypes.ANY)
-async def photo_add(message: types.message, state: FSMContext):
+async def photo_add(message: types.message, state: FSMContext) -> None:
     print("photo_add\n")
     await message.photo[0].download('./data/{}/img/{}.jpg'.format(user, message.photo[0].file_unique_id))
     await message.answer('Фото добавлено в библиотеку')
@@ -88,22 +81,16 @@ async def photo_add(message: types.message, state: FSMContext):
         await message.answer('Все фото добавлены в библиотеку', reply_markup=panel_choose_pack)
         other_State.work.set()
 
-# запись фотографий в папку этого пользователя
-
 
 # функция для создания своей библиотеки
-
-
 @dp.message_handler(text='Соберу свою библиотеку')
-async def get_id_from_message(message: types.message, state: FSMContext):
+async def get_id_from_message(message: types.message, state: FSMContext) -> None:
     await message.answer('Отлично' + emoji.emojize(' 🤔'), reply_markup=cancel_panel)
     await other_State.waiting.set()
 
 
 # функция создает папку с именем пользователя в директории data
-
-
-async def folder_generator(user):
+async def folder_generator(user) -> None:
     if not os.path.exists("./data/{}".format(user)):
         os.mkdir("./data/{}".format(user))
         os.mkdir("./data/{}/img".format(user))
